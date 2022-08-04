@@ -1,5 +1,7 @@
 # Template
 
+[![Lint Code Base](https://github.com/sanselme/default/actions/workflows/super-linter.yml/badge.svg)](https://github.com/sanselme/default/actions/workflows/super-linter.yml)
+
 ---
 
 Copyright © 2022 Schubert Anselme <schubert@anselm.es>

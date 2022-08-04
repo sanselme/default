@@ -6,4 +6,4 @@
 
 ## New Contributors
 
-**Full Changelog**: <https://github.com/sanselme/<repository>/commits/v0.1-alpha.1>
+[**Full Changelog**](https://github.com/sanselme/<repository>/commits/v0.1-alpha.1)

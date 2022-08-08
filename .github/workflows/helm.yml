@@ -22,14 +22,18 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'Repo from branch'
-        required: true
-        default: 'dev'
+      name:
+        description: Cluster name
+        required: false
+        default: kind-helm-test
+      namespace:
+        description: Cluster namespace
+        required: false
+        default: default
 
 jobs:
 
-  build:
+  helm:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3
@@ -40,7 +44,7 @@ jobs:
         cat <<-eof | tee /tmp/kind-config.yaml
         kind: Cluster
         apiVersion: kind.x-k8s.io/v1alpha4
-        name: kind-etcd-bench
+        name: ${{ github.event.inputs.name }}
         nodes:
         - role: control-plane
         eof
@@ -52,26 +56,18 @@ jobs:
       run: |
         # Generate values file
         cat <<-eof | tee /tmp/values.yaml
-        experimental:
-          enabled: true
-          install:
-            enabled: true
-            etcdBench:
-              enabled: true
-            fio:
-              enabled: true
         eof
 
         # Install helm chart
-        helm upgrade --install etcd-bench \
-          ./deployment/chart/etcd-bench \
+        helm upgrade --install ${{ github.event.inputs.name }} \
+          ./deployment/chart/<chartname> \
           --reuse-values \
-          --namespace kube-system \
+          --namespace ${{ github.event.inputs.namespace }} \
 
         # Verify installation
-        helm ls -n kube-system
+        helm ls -n ${{ github.event.inputs.namespace }}
 
     # TODO: delete cluster on failure
     - name: Cleanup
       run: |
-        kind delete cluster --name kind-etcd-bench
+        kind delete cluster --name ${{ github.event.inputs.name }}

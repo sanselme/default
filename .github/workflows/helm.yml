@@ -34,7 +34,7 @@ on:
         default: default
 
 jobs:
-  helm:
+  chart:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3

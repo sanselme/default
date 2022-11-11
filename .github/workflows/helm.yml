@@ -17,7 +17,9 @@ name: Helm
 
 on:
   # push:
-  #  branches: [ "dev" ]
+  #   branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -32,42 +34,41 @@ on:
         default: default
 
 jobs:
-
-  helm:
+  chart:
     runs-on: self-hosted
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Create kind cluster
-      run: |
-        # Generate kind config
-        cat <<-eof | tee /tmp/kind-config.yaml
-        kind: Cluster
-        apiVersion: kind.x-k8s.io/v1alpha4
-        name: ${{ github.event.inputs.name }}
-        nodes:
-        - role: control-plane
-        eof
+      - name: Create kind cluster
+        run: |
+          # Generate kind config
+          cat <<-eof | tee /tmp/kind-config.yaml
+          kind: Cluster
+          apiVersion: kind.x-k8s.io/v1alpha4
+          name: ${{ github.event.inputs.name }}
+          nodes:
+          - role: control-plane
+          eof
 
-        # Create kind cluster
-        kind create cluster --config /tmp/kind-config.yaml
+          # Create kind cluster
+          kind create cluster --config /tmp/kind-config.yaml
 
-    - name: Install helm chart
-      run: |
-        # Generate values file
-        cat <<-eof | tee /tmp/values.yaml
-        eof
+      - name: Install helm chart
+        run: |
+          # Generate values file
+          cat <<-eof | tee /tmp/values.yaml
+          eof
 
-        # Install helm chart
-        helm upgrade --install ${{ github.event.inputs.name }} \
-          ./deployment/chart/<chartname> \
-          --reuse-values \
-          --namespace ${{ github.event.inputs.namespace }} \
+          # Install helm chart
+          helm upgrade --install ${{ github.event.inputs.name }} \
+            ./deployment/chart/<chartname> \
+            --reuse-values \
+            --namespace ${{ github.event.inputs.namespace }} \
 
-        # Verify installation
-        helm ls -n ${{ github.event.inputs.namespace }}
+          # Verify installation
+          helm ls -n ${{ github.event.inputs.namespace }}
 
-    # TODO: delete cluster on failure
-    - name: Cleanup
-      run: |
-        kind delete cluster --name ${{ github.event.inputs.name }}
+      # TODO: delete cluster on failure
+      - name: Cleanup
+        run: |
+          kind delete cluster --name ${{ github.event.inputs.name }}

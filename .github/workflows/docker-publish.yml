@@ -52,7 +52,7 @@ jobs:
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
         if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@b3413d484cc23cf8778c3d2aa361568d4eb54679
+        uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b
         with:
           cosign-release: "v1.9.0"
 
@@ -82,7 +82,7 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@69f6fc9d46f2f8bf0d5491e4aabe0bb8c6a4678a
+        uses: docker/metadata-action@57396166ad8aefe6098280995947635806a0e6ea
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 

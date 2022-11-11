@@ -23,11 +23,11 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-
+  # Platform to build for
+  PLATFORMS: linux/amd64,linux/arm64
 
 jobs:
-  build:
-
+  container:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,6 +35,14 @@ jobs:
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
+
+    # Uncomment to run matrix builds
+    # strategy:
+    #   matrix:
+    #     include:
+    #       - context: build/package/Dockerfile
+    #         path: container/ghcr
+    #         name: ${{ env.IMAGE_NAME }}
 
     steps:
       - name: Checkout repository
@@ -46,8 +54,12 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@b3413d484cc23cf8778c3d2aa361568d4eb54679
         with:
-          cosign-release: 'v1.9.0'
+          cosign-release: "v1.9.0"
 
+      # Setup QEMU for multi-platform builds
+      # https://github.com/docker/setup-qemu-action
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
 
       # Workaround: https://github.com/docker/build-push-action/issues/461
       - name: Setup Docker buildx
@@ -62,6 +74,9 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+          # Uncomment to use external registry
+          # username: ${{ secret.REGISTRY_USERNAME }}
+          # password: ${{ secret.REGISTRY_TOKEN }}
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
@@ -82,6 +97,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          platforms: ${{ env.PLATFORMS }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker

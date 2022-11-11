@@ -1,6 +1,15 @@
 # Template
 
 [![Lint Code Base](https://github.com/sanselme/default/actions/workflows/super-linter.yml/badge.svg)](https://github.com/sanselme/default/actions/workflows/super-linter.yml)
+[![Dependency Review](https://github.com/sanselme/default/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/sanselme/default/actions/workflows/dependency-review.yml)
+[![CodeQL](https://github.com/sanselme/default/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/sanselme/default/actions/workflows/codeql-analysis.yml)
+
+[![Go](https://github.com/sanselme/default/actions/workflows/go.yml/badge.svg)](https://github.com/sanselme/default/actions/workflows/go.yml)
+
+[![Docker](https://github.com/sanselme/default/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/sanselme/default/actions/workflows/docker-publish.yml)
+[![Helm](https://github.com/sanselme/default/actions/workflows/helm.yml/badge.svg)](https://github.com/sanselme/default/actions/workflows/helm.yml)
+
+[![GitHub Pages](https://github.com/sanselme/default/actions/workflows/pages.yml/badge.svg)](https://github.com/sanselme/default/actions/workflows/pages.yml)
 
 ---
 
